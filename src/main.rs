@@ -8,6 +8,7 @@ use rustfest_game_assets::{PLAYER, BULLET, ASTEROIDS};
 
 const ROTATION_SPEED: f64 = 2.;
 const THRUST: f64 = 1.;
+const MAX_VELOCITY: f64 = 2.;
 
 #[derive(Default)]
 struct ControllerState {
@@ -41,12 +42,23 @@ fn main() {
         event.update(|&UpdateArgs { dt }| {
             let acceleration = Basis2::from_angle(player.rotation).rotate_vector(Vector2::unit_y());
 
+            // Apply acceleration to the velocity
             if controller.up { player.velocity += acceleration * THRUST * dt}
             if controller.down { player.velocity -= acceleration * THRUST * dt; }
             if controller.left { player.rotation += Rad(ROTATION_SPEED * dt); }
             if controller.right { player.rotation -= Rad(ROTATION_SPEED * dt); }
 
+            // Clamp velocity
+            if player.velocity.magnitude() > MAX_VELOCITY {
+                player.velocity = player.velocity.normalize_to(MAX_VELOCITY);
+            }
+
+            // Apply velocity to position
             player.position += player.velocity * dt;
+
+            // Wrap position to the screen
+            if player.position.x.abs() > 1. { player.position.x *= -1.; }
+            if player.position.y.abs() > 1. { player.position.y *= -1.; }
         });
 
         event.button(|ButtonArgs { button, state, .. }| {
