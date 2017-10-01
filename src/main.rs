@@ -39,6 +39,7 @@ struct Player {
 struct Bullet {
     position: Point2<f64>,
     velocity: Vector2<f64>,
+    alive: bool,
     age: f64,
 }
 
@@ -79,6 +80,10 @@ impl Player {
 impl Bullet {
     fn update(&mut self, _: &ControllerState, dt: f64) {
         self.age += dt;
+        if self.age > BULLET_LIFETIME {
+            self.alive = false;
+        }
+
         self.position += self.velocity * dt;
 
         // Wrap position to the screen
@@ -109,9 +114,7 @@ fn main() {
             for bullet in &mut bullets {
                 bullet.update(&controller, dt);
             }
-            bullets.retain(|bullet| {
-                bullet.age < BULLET_LIFETIME
-            });
+            bullets.retain(|bullet| { bullet.alive });
             if controller.fire && player.time_since_fired > FIRE_INTERVAL {
                 player.time_since_fired = 0.;
                 let bullet_velocity = Basis2::from_angle(player.rotation).rotate_vector(Vector2::unit_y()) * BULLET_SPEED;
@@ -119,6 +122,7 @@ fn main() {
                     position: player.position,
                     velocity: bullet_velocity,
                     age: 0.,
+                    alive: true,
                 });
             }
         });
