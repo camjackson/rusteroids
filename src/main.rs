@@ -29,6 +29,20 @@ struct ControllerState {
     fire: bool,
 }
 
+impl ControllerState {
+    fn update(&mut self, button: Button, state: ButtonState) {
+        use Button::*;
+        match button {
+            Keyboard(Key::W) => { self.up = state == ButtonState::Press; },
+            Keyboard(Key::A) => { self.left = state == ButtonState::Press; },
+            Keyboard(Key::S) => { self.down = state == ButtonState::Press; },
+            Keyboard(Key::D) => { self.right = state == ButtonState::Press; },
+            Keyboard(Key::Space) => { self.fire = state == ButtonState::Press; }
+            _ => (),
+        };
+    }
+}
+
 struct Player {
     position: Point2<f64>,
     velocity: Vector2<f64>,
@@ -128,16 +142,7 @@ fn main() {
         });
 
         event.button(|ButtonArgs { button, state, .. }| {
-            use Button::*;
-
-            match button {
-                Keyboard(Key::W) => { controller.up = state == ButtonState::Press; },
-                Keyboard(Key::A) => { controller.left = state == ButtonState::Press; },
-                Keyboard(Key::S) => { controller.down = state == ButtonState::Press; },
-                Keyboard(Key::D) => { controller.right = state == ButtonState::Press; },
-                Keyboard(Key::Space) => { controller.fire = state == ButtonState::Press; }
-                _ => (),
-            };
+            controller.update(button, state)
         });
 
         window.draw_2d(&event, |_, graphics| {
