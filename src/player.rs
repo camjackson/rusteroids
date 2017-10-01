@@ -1,7 +1,11 @@
-use cgmath::*;
+use piston_window::{polygon, math, Transformed, Graphics, ImageSize};
+use cgmath::{Basis2, Rotation2, Rotation, InnerSpace, Point2, Vector2, Rad};
+use rustfest_game_assets::PLAYER;
 
 use controller::Controller;
 
+const RED: [f32; 4] = [1., 0., 0., 1.];
+const PLAYER_SCALE: f64 = 0.1;
 const MAX_SPEED: f64 = 2.;
 const ROTATION_SPEED: f64 = 2.;
 const THRUST: f64 = 1.;
@@ -37,5 +41,19 @@ impl Player {
 
         // Count time since last fire
         self.time_since_fired += dt;
+    }
+
+    pub fn render<G, T>(&self, graphics: &mut G)
+        where G: Graphics<Texture = T>, T: ImageSize
+    {
+        polygon(
+            RED,
+            PLAYER,
+            math::identity()
+                .trans(self.position.x, self.position.y)
+                .scale(PLAYER_SCALE, PLAYER_SCALE)
+                .rot_rad(self.rotation.0),
+            graphics,
+        );
     }
 }
