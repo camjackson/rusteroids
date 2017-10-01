@@ -24,6 +24,30 @@ struct Player {
     rotation: Rad<f64>,
 }
 
+impl Player {
+    fn update(&mut self, controller: &ControllerState, dt: f64) {
+        let acceleration = Basis2::from_angle(self.rotation).rotate_vector(Vector2::unit_y());
+
+        // Apply acceleration to the velocity
+        if controller.up { self.velocity += acceleration * THRUST * dt}
+        if controller.down { self.velocity -= acceleration * THRUST * dt; }
+        if controller.left { self.rotation += Rad(ROTATION_SPEED * dt); }
+        if controller.right { self.rotation -= Rad(ROTATION_SPEED * dt); }
+
+        // Clamp velocity
+        if self.velocity.magnitude() > MAX_VELOCITY {
+            self.velocity = self.velocity.normalize_to(MAX_VELOCITY);
+        }
+
+        // Apply velocity to position
+        self.position += self.velocity * dt;
+
+        // Wrap position to the screen
+        if self.position.x.abs() > 1. { self.position.x *= -1.; }
+        if self.position.y.abs() > 1. { self.position.y *= -1.; }
+    }
+}
+
 fn main() {
     let mut window: PistonWindow = WindowSettings::new("WOW IT'S A GAME", [480, 480])
         .exit_on_esc(true)
@@ -40,25 +64,8 @@ fn main() {
 
     while let Some(event) = window.next() {
         event.update(|&UpdateArgs { dt }| {
-            let acceleration = Basis2::from_angle(player.rotation).rotate_vector(Vector2::unit_y());
 
-            // Apply acceleration to the velocity
-            if controller.up { player.velocity += acceleration * THRUST * dt}
-            if controller.down { player.velocity -= acceleration * THRUST * dt; }
-            if controller.left { player.rotation += Rad(ROTATION_SPEED * dt); }
-            if controller.right { player.rotation -= Rad(ROTATION_SPEED * dt); }
-
-            // Clamp velocity
-            if player.velocity.magnitude() > MAX_VELOCITY {
-                player.velocity = player.velocity.normalize_to(MAX_VELOCITY);
-            }
-
-            // Apply velocity to position
-            player.position += player.velocity * dt;
-
-            // Wrap position to the screen
-            if player.position.x.abs() > 1. { player.position.x *= -1.; }
-            if player.position.y.abs() > 1. { player.position.y *= -1.; }
+            player.update(&controller, dt);
         });
 
         event.button(|ButtonArgs { button, state, .. }| {
