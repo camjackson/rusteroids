@@ -17,11 +17,6 @@ use bullet::Bullet;
 // Render constants
 const BLUE: [f32; 4] = [0., 0., 1., 1.];
 
-// Game constants
-const BULLET_SPEED: f64 = 4.;
-const FIRE_INTERVAL: f64 = 0.2;
-
-
 fn main() {
     let mut window: PistonWindow = WindowSettings::new("WOW IT'S A GAME", [480, 480])
         .exit_on_esc(true)
@@ -40,16 +35,11 @@ fn main() {
 
     while let Some(event) = window.next() {
         event.update(|&UpdateArgs { dt }| {
-            player.update(&controller, dt);
+            player.update(&controller, &mut bullets, dt);
             for bullet in &mut bullets {
                 bullet.update(&controller, dt);
             }
             bullets.retain(|bullet| { bullet.alive });
-            if controller.fire && player.time_since_fired > FIRE_INTERVAL {
-                player.time_since_fired = 0.;
-                let bullet_velocity = Basis2::from_angle(player.rotation).rotate_vector(Vector2::unit_y()) * BULLET_SPEED;
-                bullets.push(Bullet::new(player.position, bullet_velocity));
-            }
         });
 
         event.button(|ButtonArgs { button, state, .. }| {
