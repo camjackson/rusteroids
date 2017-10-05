@@ -3,7 +3,7 @@ use cgmath::{Basis2, Rotation2, Rotation, InnerSpace, Point2, Vector2, Rad};
 use rustfest_game_assets::PLAYER;
 
 use controller::Controller;
-use bullet::Bullet;
+use bullets::Bullets;
 
 const RED: [f32; 4] = [1., 0., 0., 1.];
 const PLAYER_SCALE: f64 = 0.1;
@@ -20,7 +20,7 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn update(&mut self, controller: &Controller, bullets: &mut Vec<Bullet>, dt: f64) {
+    pub fn update(&mut self, controller: &Controller, bullets: &mut Bullets, dt: f64) {
         let acceleration = Basis2::from_angle(self.rotation).rotate_vector(Vector2::unit_y())* THRUST;
 
         // Apply acceleration to the velocity
@@ -47,7 +47,7 @@ impl Player {
         // Fire
         if controller.fire && self.time_since_fired > FIRE_INTERVAL {
             self.time_since_fired = 0.;
-            bullets.push(Bullet::new(self.position, self.rotation));
+            bullets.spawn(self.position, self.rotation);
         }
     }
 

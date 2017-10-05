@@ -2,8 +2,6 @@ use piston_window::{polygon, math, Transformed, Graphics, ImageSize};
 use cgmath::{Point2, Vector2, Basis2, Rotation2, Rotation, Rad};
 use rustfest_game_assets::BULLET;
 
-use controller::Controller;
-
 const BULLET_LIFETIME: f64 = 0.5;
 const RED: [f32; 4] = [1., 0., 0., 1.];
 const BULLET_SCALE: f64 = 0.02;
@@ -27,7 +25,7 @@ impl Bullet {
         }
     }
 
-    pub fn update(&mut self, _: &Controller, dt: f64) {
+    pub fn update(&mut self, dt: f64) {
         self.age += dt;
         if self.age > BULLET_LIFETIME {
             self.alive = false;

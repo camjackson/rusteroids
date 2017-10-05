@@ -7,14 +7,14 @@ use cgmath::*;
 
 mod player;
 mod controller;
+mod bullets;
 mod bullet;
 mod asteroid;
 
 use player::Player;
 use controller::Controller;
-use bullet::Bullet;
+use bullets::Bullets;
 
-// Render constants
 const BLUE: [f32; 4] = [0., 0., 1., 1.];
 
 fn main() {
@@ -31,15 +31,12 @@ fn main() {
         rotation: Rad(0.),
         time_since_fired: 0.,
     };
-    let mut bullets: Vec<Bullet> = vec![];
+    let mut bullets = Bullets::default();
 
     while let Some(event) = window.next() {
         event.update(|&UpdateArgs { dt }| {
             player.update(&controller, &mut bullets, dt);
-            for bullet in &mut bullets {
-                bullet.update(&controller, dt);
-            }
-            bullets.retain(|bullet| { bullet.alive });
+            bullets.update(dt);
         });
 
         event.button(|ButtonArgs { button, state, .. }| {
@@ -49,7 +46,7 @@ fn main() {
         window.draw_2d(&event, |_, graphics| {
             clear(BLUE, graphics);
             player.render(graphics);
-            for bullet in &bullets { bullet.render(graphics); }
+            bullets.render(graphics);
         });
     }
 }
