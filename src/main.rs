@@ -3,7 +3,6 @@ extern crate cgmath;
 extern crate rustfest_game_assets;
 
 use piston_window::*;
-use cgmath::*;
 
 mod player;
 mod controller;
@@ -25,12 +24,7 @@ fn main() {
         .expect("OpenGL can't be instantiated");
 
     let mut controller = Controller::default();
-    let mut player = Player {
-        position: Point2 { x: 0., y: 0.  },
-        velocity: Vector2 { x: 0., y: 0.  },
-        rotation: Rad(0.),
-        time_since_fired: 0.,
-    };
+    let mut player = Player::new();
     let mut bullets = Bullets::default();
 
     while let Some(event) = window.next() {

@@ -8,8 +8,8 @@ const BULLET_SCALE: f64 = 0.02;
 const BULLET_SPEED: f64 = 4.;
 
 pub struct Bullet {
-    pub position: Point2<f64>,
     pub alive: bool,
+    position: Point2<f64>,
     velocity: Vector2<f64>,
     age: f64,
 }

@@ -13,13 +13,22 @@ const THRUST: f64 = 1.;
 const FIRE_INTERVAL: f64 = 0.2;
 
 pub struct Player {
-    pub position: Point2<f64>,
-    pub velocity: Vector2<f64>,
-    pub rotation: Rad<f64>,
-    pub time_since_fired: f64,
+    position: Point2<f64>,
+    velocity: Vector2<f64>,
+    rotation: Rad<f64>,
+    time_since_fired: f64,
 }
 
 impl Player {
+    pub fn new() -> Player {
+        Player {
+            position: Point2 { x: 0., y: 0.  },
+            velocity: Vector2 { x: 0., y: 0.  },
+            rotation: Rad(0.),
+            time_since_fired: 0.,
+        }
+    }
+
     pub fn update(&mut self, controller: &Controller, bullets: &mut Bullets, dt: f64) {
         let acceleration = Basis2::from_angle(self.rotation).rotate_vector(Vector2::unit_y())* THRUST;
 
