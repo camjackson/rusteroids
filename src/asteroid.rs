@@ -26,7 +26,7 @@ impl Asteroid {
     pub fn new() -> Asteroid {
         Asteroid {
             position: Point2 { x: random(), y: random() },
-            velocity: random(),
+            velocity: Vector2 { x: random::<f64>() - 0.5, y: random::<f64>() - 0.5 },
             rotation: Rad(0.),
             level: 3,
             sprite: (random::<f32>() * 5.) as usize,
