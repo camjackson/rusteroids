@@ -29,7 +29,7 @@ impl Asteroid {
             velocity: random(),
             rotation: Rad(0.),
             level: 3,
-            sprite: random::<usize>() / usize::MAX * 5,
+            sprite: (random::<f32>() * 5.) as usize,
         }
     }
 
