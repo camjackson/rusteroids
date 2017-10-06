@@ -22,11 +22,15 @@ pub struct Asteroid {
     sprite: usize,
 }
 
+fn rand(min: f64, range: f64) -> f64 {
+    random::<f64>() * range + min
+}
+
 impl Asteroid {
     pub fn new() -> Asteroid {
         Asteroid {
-            position: Point2 { x: random(), y: random() },
-            velocity: Vector2 { x: random::<f64>() - 0.5, y: random::<f64>() - 0.5 },
+            position: Point2 { x: rand(-1., 2.), y: rand(-1., 2.) },
+            velocity: Vector2 { x: rand(-0.5, 1.), y: rand(-0.5, 1.) },
             rotation: Rad(0.),
             level: 3,
             sprite: (random::<f32>() * 5.) as usize,
