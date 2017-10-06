@@ -1,6 +1,7 @@
 extern crate piston_window;
 extern crate cgmath;
 extern crate rustfest_game_assets;
+extern crate rand;
 
 use piston_window::*;
 
@@ -8,11 +9,13 @@ mod player;
 mod controller;
 mod bullets;
 mod bullet;
+mod asteroids;
 mod asteroid;
 
 use player::Player;
 use controller::Controller;
 use bullets::Bullets;
+use asteroids::Asteroids;
 
 const BLUE: [f32; 4] = [0., 0., 1., 1.];
 
@@ -26,11 +29,13 @@ fn main() {
     let mut controller = Controller::default();
     let mut player = Player::new();
     let mut bullets = Bullets::default();
+    let mut asteroids = Asteroids::default();
 
     while let Some(event) = window.next() {
         event.update(|&UpdateArgs { dt }| {
             player.update(&controller, &mut bullets, dt);
             bullets.update(dt);
+            asteroids.update(dt);
         });
 
         event.button(|ButtonArgs { button, state, .. }| {
@@ -41,6 +46,7 @@ fn main() {
             clear(BLUE, graphics);
             player.render(graphics);
             bullets.render(graphics);
+            asteroids.render(graphics);
         });
     }
 }
