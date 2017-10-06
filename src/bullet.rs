@@ -4,7 +4,7 @@ use rustfest_game_assets::BULLET;
 
 const BULLET_LIFETIME: f64 = 0.5;
 const RED: [f32; 4] = [1., 0., 0., 1.];
-const BULLET_SCALE: f64 = 0.02;
+const BULLET_SCALE: f64 = 0.01;
 const BULLET_SPEED: f64 = 4.;
 
 pub struct Bullet {

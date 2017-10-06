@@ -20,7 +20,7 @@ use asteroids::Asteroids;
 const BLUE: [f32; 4] = [0., 0., 1., 1.];
 
 fn main() {
-    let mut window: PistonWindow = WindowSettings::new("WOW IT'S A GAME", [480, 480])
+    let mut window: PistonWindow = WindowSettings::new("WOW IT'S A GAME", [800, 800])
         .exit_on_esc(true)
         .vsync(true)
         .build()

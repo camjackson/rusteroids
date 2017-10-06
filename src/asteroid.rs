@@ -6,7 +6,7 @@ use rand::random;
 use std::usize;
 
 const RED: [f32; 4] = [1., 0., 0., 1.];
-const ASTEROID_SCALE: f64 = 0.1;
+const ASTEROID_SCALE: f64 = 0.08;
 const ASTEROID_SPIN: f64 = 0.3;
 
 // TODO:
