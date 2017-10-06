@@ -1,9 +1,10 @@
-use piston_window::{polygon, math, Transformed, Graphics, ImageSize};
+use piston_window::{Graphics, ImageSize};
 use cgmath::{Basis2, Rotation2, Rotation, InnerSpace, Point2, Vector2, Rad};
 use rustfest_game_assets::PLAYER;
 
 use controller::Controller;
 use transform::Transform;
+use polygon::Polygon;
 use bullets::Bullets;
 
 const RED: [f32; 4] = [1., 0., 0., 1.];
@@ -15,6 +16,7 @@ const FIRE_INTERVAL: f64 = 0.2;
 
 pub struct Player {
     transform: Transform,
+    polygon: Polygon,
     velocity: Vector2<f64>,
     time_since_fired: f64,
 }
@@ -26,6 +28,10 @@ impl Player {
                 position: Point2 { x: 0., y: 0.  },
                 rotation: Rad(0.),
                 scale: Vector2 { x: PLAYER_SCALE, y: PLAYER_SCALE },
+            },
+            polygon: Polygon {
+                color: RED,
+                polygon: PLAYER,
             },
             velocity: Vector2 { x: 0., y: 0.  },
             time_since_fired: 0.,
@@ -66,14 +72,6 @@ impl Player {
     pub fn render<G, T>(&self, graphics: &mut G)
         where G: Graphics<Texture = T>, T: ImageSize
     {
-        polygon(
-            RED,
-            PLAYER,
-            math::identity()
-                .trans(self.transform.position.x, self.transform.position.y)
-                .scale(self.transform.scale.x, self.transform.scale.y)
-                .rot_rad(self.transform.rotation.0),
-            graphics,
-        );
+        self.polygon.render(&self.transform, graphics);
     }
 }

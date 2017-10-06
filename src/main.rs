@@ -12,6 +12,7 @@ mod bullets;
 mod bullet;
 mod asteroids;
 mod asteroid;
+mod polygon;
 
 use player::Player;
 use controller::Controller;

@@ -1,8 +1,9 @@
-use piston_window::{polygon, math, Transformed, Graphics, ImageSize};
+use piston_window::{Graphics, ImageSize};
 use cgmath::{Point2, Vector2, Basis2, Rotation2, Rotation, Rad};
 use rustfest_game_assets::BULLET;
 
 use transform::Transform;
+use polygon::Polygon;
 
 const BULLET_LIFETIME: f64 = 0.5;
 const RED: [f32; 4] = [1., 0., 0., 1.];
@@ -12,6 +13,7 @@ const BULLET_SPEED: f64 = 4.;
 pub struct Bullet {
     pub alive: bool,
     transform: Transform,
+    polygon: Polygon,
     velocity: Vector2<f64>,
     age: f64,
 }
@@ -24,6 +26,10 @@ impl Bullet {
                 position,
                 rotation: Rad(0.),
                 scale: Vector2 { x: BULLET_SCALE, y: BULLET_SCALE },
+            },
+            polygon: Polygon {
+                color: RED,
+                polygon: BULLET,
             },
             velocity: direction * BULLET_SPEED,
             age: 0.,
@@ -47,14 +53,6 @@ impl Bullet {
     pub fn render<G, T>(&self, graphics: &mut G)
         where G: Graphics<Texture = T>, T: ImageSize
     {
-        polygon(
-            RED,
-            BULLET,
-            math::identity()
-                .trans(self.transform.position.x, self.transform.position.y)
-                .scale(self.transform.scale.x, self.transform.scale.y)
-                .rot_rad(self.transform.rotation.0),
-            graphics,
-        )
+        self.polygon.render(&self.transform, graphics);
     }
 }

@@ -1,9 +1,10 @@
-use piston_window::{polygon, math, Transformed, Graphics, ImageSize};
+use piston_window::{Graphics, ImageSize};
 use cgmath::{Point2, Vector2, Rad};
 use rustfest_game_assets::ASTEROIDS;
 use rand::random;
 
 use transform::Transform;
+use polygon::Polygon;
 
 const RED: [f32; 4] = [1., 0., 0., 1.];
 const ASTEROID_SCALES: [f64; 3] = [0.02, 0.05, 0.08];
@@ -17,10 +18,10 @@ const TAU: f64 = 6.283185;
 
 pub struct Asteroid {
     transform: Transform,
+    polygon: Polygon,
     velocity: Vector2<f64>,
     spin: Rad<f64>,
     level: usize,
-    sprite: usize,
 }
 
 fn rand(min: f64, range: f64) -> f64 {
@@ -39,10 +40,13 @@ impl Asteroid {
                 rotation: Rad(rand(0., TAU)),
                 scale: Vector2 { x: ASTEROID_SCALES[INITIAL_LEVEL], y: ASTEROID_SCALES[INITIAL_LEVEL] }
             },
+            polygon: Polygon {
+                color: RED,
+                polygon: ASTEROIDS[(random::<f32>() * 5.) as usize],
+            },
             velocity,
             spin: Rad(rand(0., ASTEROID_MAX_SPIN)),
             level: INITIAL_LEVEL,
-            sprite: (random::<f32>() * 5.) as usize,
         }
     }
 
@@ -58,14 +62,6 @@ impl Asteroid {
     pub fn render<G, T>(&self, graphics: &mut G)
         where G: Graphics<Texture = T>, T: ImageSize
     {
-        polygon(
-            RED,
-            ASTEROIDS[self.sprite],
-            math::identity()
-                .trans(self.transform.position.x, self.transform.position.y)
-                .scale(self.transform.scale.x, self.transform.scale.y)
-                .rot_rad(self.transform.rotation.0),
-            graphics,
-        )
+        self.polygon.render(&self.transform, graphics);
     }
 }
