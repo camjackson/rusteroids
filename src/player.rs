@@ -25,6 +25,7 @@ impl Player {
             transform: Transform {
                 position: Point2 { x: 0., y: 0.  },
                 rotation: Rad(0.),
+                scale: Vector2 { x: PLAYER_SCALE, y: PLAYER_SCALE },
             },
             velocity: Vector2 { x: 0., y: 0.  },
             time_since_fired: 0.,
@@ -70,7 +71,7 @@ impl Player {
             PLAYER,
             math::identity()
                 .trans(self.transform.position.x, self.transform.position.y)
-                .scale(PLAYER_SCALE, PLAYER_SCALE)
+                .scale(self.transform.scale.x, self.transform.scale.y)
                 .rot_rad(self.transform.rotation.0),
             graphics,
         );

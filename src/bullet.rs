@@ -23,6 +23,7 @@ impl Bullet {
             transform: Transform {
                 position,
                 rotation: Rad(0.),
+                scale: Vector2 { x: BULLET_SCALE, y: BULLET_SCALE },
             },
             velocity: direction * BULLET_SPEED,
             age: 0.,
@@ -51,7 +52,8 @@ impl Bullet {
             BULLET,
             math::identity()
                 .trans(self.transform.position.x, self.transform.position.y)
-                .scale(BULLET_SCALE, BULLET_SCALE),
+                .scale(self.transform.scale.x, self.transform.scale.y)
+                .rot_rad(self.transform.rotation.0),
             graphics,
         )
     }

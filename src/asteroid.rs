@@ -7,6 +7,7 @@ use transform::Transform;
 
 const RED: [f32; 4] = [1., 0., 0., 1.];
 const ASTEROID_SCALES: [f64; 3] = [0.02, 0.05, 0.08];
+const INITIAL_LEVEL: usize = 2;
 const ASTEROID_MAX_SPEED: f64 = 0.4;
 const ASTEROID_MAX_SPIN: f64 = 0.5;
 const TAU: f64 = 6.283185;
@@ -36,10 +37,11 @@ impl Asteroid {
             transform: Transform {
                 position: Point2 { x: rand(-1., 2.), y: rand(-1., 2.) },
                 rotation: Rad(rand(0., TAU)),
+                scale: Vector2 { x: ASTEROID_SCALES[INITIAL_LEVEL], y: ASTEROID_SCALES[INITIAL_LEVEL] }
             },
             velocity,
             spin: Rad(rand(0., ASTEROID_MAX_SPIN)),
-            level: 2,
+            level: INITIAL_LEVEL,
             sprite: (random::<f32>() * 5.) as usize,
         }
     }
@@ -61,7 +63,7 @@ impl Asteroid {
             ASTEROIDS[self.sprite],
             math::identity()
                 .trans(self.transform.position.x, self.transform.position.y)
-                .scale(ASTEROID_SCALES[self.level], ASTEROID_SCALES[self.level])
+                .scale(self.transform.scale.x, self.transform.scale.y)
                 .rot_rad(self.transform.rotation.0),
             graphics,
         )
