@@ -6,21 +6,20 @@ use rand::random;
 use std::usize;
 
 const RED: [f32; 4] = [1., 0., 0., 1.];
-const ASTEROID_SCALE: f64 = 0.08;
+const ASTEROID_SCALES: [f64; 3] = [0.02, 0.05, 0.08];
 const ASTEROID_MAX_SPEED: f64 = 0.4;
 const ASTEROID_MAX_SPIN: f64 = 0.5;
 const TAU: f64 = 6.283185;
 
 // TODO:
 // - Implement collisions - on collision change level, sprite, velocity, rotation, angular velocity
-// - Change scale with level
 
 pub struct Asteroid {
     position: Point2<f64>,
     velocity: Vector2<f64>,
     rotation: Rad<f64>,
     spin: Rad<f64>,
-    level: u8,
+    level: usize,
     sprite: usize,
 }
 
@@ -39,7 +38,7 @@ impl Asteroid {
             velocity,
             rotation: Rad(rand(0., TAU)),
             spin: Rad(rand(0., ASTEROID_MAX_SPIN)),
-            level: 3,
+            level: 2,
             sprite: (random::<f32>() * 5.) as usize,
         }
     }
@@ -61,7 +60,7 @@ impl Asteroid {
             ASTEROIDS[self.sprite],
             math::identity()
                 .trans(self.position.x, self.position.y)
-                .scale(ASTEROID_SCALE, ASTEROID_SCALE)
+                .scale(ASTEROID_SCALES[self.level], ASTEROID_SCALES[self.level])
                 .rot_rad(self.rotation.0),
             graphics,
         )
