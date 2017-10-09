@@ -12,7 +12,7 @@ const BULLET_SPEED: f64 = 4.;
 
 pub struct Bullet {
     pub alive: bool,
-    transform: Transform,
+    pub transform: Transform,
     polygon: Polygon,
     velocity: Vector2<f64>,
     age: f64,

@@ -10,7 +10,7 @@ use bullets::Bullets;
 const RED: [f32; 4] = [1., 0., 0., 1.];
 const PLAYER_SCALE: f64 = 0.035;
 const MAX_SPEED: f64 = 1.;
-const ROTATION_SPEED: f64 = 2.;
+const ROTATION_SPEED: f64 = 2.8;
 const THRUST: f64 = 0.7;
 const FIRE_INTERVAL: f64 = 0.2;
 

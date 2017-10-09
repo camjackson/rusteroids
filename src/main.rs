@@ -1,3 +1,4 @@
+extern crate core;
 extern crate piston_window;
 extern crate cgmath;
 extern crate rustfest_game_assets;
@@ -31,13 +32,13 @@ fn main() {
     let mut controller = Controller::default();
     let mut player = Player::new();
     let mut bullets = Bullets::default();
-    let mut asteroids = Asteroids::default();
+    let mut asteroids = Asteroids::new();
 
     while let Some(event) = window.next() {
         event.update(|&UpdateArgs { dt }| {
             player.update(&controller, &mut bullets, dt);
             bullets.update(dt);
-            asteroids.update(dt);
+            asteroids.update(&bullets, dt);
         });
 
         event.button(|ButtonArgs { button, state, .. }| {

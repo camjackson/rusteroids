@@ -1,3 +1,4 @@
+use core::slice::Iter;
 use piston_window::{Graphics, ImageSize};
 use cgmath::{Point2, Rad};
 
@@ -24,5 +25,9 @@ impl Bullets {
 
     pub fn spawn(&mut self, position: Point2<f64>, rotation: Rad<f64>) {
         self.bullets.push(Bullet::new(position, rotation))
+    }
+
+    pub fn iter(&self) -> Iter<Bullet> {
+        self.bullets.iter()
     }
 }
