@@ -14,34 +14,37 @@ impl Asteroids {
     pub fn new() -> Asteroids {
         let mut asteroids = vec![];
         for _ in 0..NUM_ASTEROIDS {
-            asteroids.push(Asteroid::new(INITIAL_LEVEL));
+            asteroids.push(Asteroid::new(INITIAL_LEVEL, None));
         }
         Asteroids { asteroids }
     }
 
-    pub fn update(&mut self, bullets: &Bullets, dt: f64) {
-        let mut deletions = vec![];
-        for (index, asteroid) in &mut self.asteroids.iter_mut().enumerate() {
+    pub fn update(&mut self, bullets: &mut Bullets, dt: f64) {
+        let mut asteroid_deletions = vec![];
+        for (asteroid_index, asteroid) in &mut self.asteroids.iter_mut().enumerate() {
             match asteroid.update(bullets, dt) {
                 UpdateResult::Lived => (),
-                UpdateResult::Died => deletions.push(index),
+                UpdateResult::Died { bullet_index } => {
+                    asteroid_deletions.push(asteroid_index);
+                    bullets.delete(bullet_index);
+                },
             }
         }
 
         // Delete in reverse so the indices don't get stuffed up
-        deletions.reverse();
-        for deletion in deletions {
+        asteroid_deletions.reverse();
+        for deletion in asteroid_deletions {
             let deleted = self.asteroids.swap_remove(deletion);
             match deleted.level {
                 0 => (),
                 1 => {
-                    self.asteroids.push(Asteroid::new(0));
-                    self.asteroids.push(Asteroid::new(0));
+                    self.asteroids.push(Asteroid::new(0, Some(deleted.transform.position)));
+                    self.asteroids.push(Asteroid::new(0, Some(deleted.transform.position)));
                 },
                 2 => {
-                    self.asteroids.push(Asteroid::new(1));
-                    self.asteroids.push(Asteroid::new(1));
-                    self.asteroids.push(Asteroid::new(INITIAL_LEVEL));
+                    self.asteroids.push(Asteroid::new(1, Some(deleted.transform.position)));
+                    self.asteroids.push(Asteroid::new(1, Some(deleted.transform.position)));
+                    self.asteroids.push(Asteroid::new(INITIAL_LEVEL, None));
                 },
                 _ => unreachable!("Asteroid level was wrong!!!")
             }

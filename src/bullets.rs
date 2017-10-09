@@ -27,6 +27,10 @@ impl Bullets {
         self.bullets.push(Bullet::new(position, rotation))
     }
 
+    pub fn delete(&mut self, index: usize) {
+        self.bullets.swap_remove(index);
+    }
+
     pub fn iter(&self) -> Iter<Bullet> {
         self.bullets.iter()
     }
