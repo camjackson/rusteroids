@@ -9,8 +9,8 @@ use bullets::Bullets;
 
 const RED: [f32; 4] = [1., 0., 0., 1.];
 const ASTEROID_SCALES: [f64; 3] = [0.04, 0.06, 0.08];
-const ASTEROID_MAX_SPEED: f64 = 0.4;
-const ASTEROID_MAX_SPIN: f64 = 0.5;
+const ASTEROID_MAX_SPEED: f64 = 0.2;
+const ASTEROID_MAX_SPIN: f64 = 1.;
 const TAU: f64 = 6.283185;
 
 // TODO:
