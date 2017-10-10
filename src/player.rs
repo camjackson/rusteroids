@@ -13,6 +13,7 @@ const MAX_SPEED: f64 = 1.;
 const ROTATION_SPEED: f64 = 2.8;
 const THRUST: f64 = 0.7;
 const FIRE_INTERVAL: f64 = 0.2;
+const LIVES: u8 = 3;
 const INITIAL_POSITION: Point2<f64> = Point2 { x: 0., y: 0.  };
 const INITIAL_VELOCITY: Vector2<f64> = Vector2 { x: 0., y: 0.  };
 
@@ -21,6 +22,7 @@ pub struct Player {
     polygon: Polygon,
     velocity: Vector2<f64>,
     time_since_fired: f64,
+    lives: u8,
 }
 
 impl Player {
@@ -37,6 +39,7 @@ impl Player {
             },
             velocity: INITIAL_VELOCITY,
             time_since_fired: 0.,
+            lives: LIVES,
         }
     }
 
@@ -72,7 +75,12 @@ impl Player {
     }
 
     pub fn kill(&mut self) {
-        self.transform.position = INITIAL_POSITION;
+        if self.lives > 0 {
+            self.transform.position = INITIAL_POSITION;
+            self.lives -= 1;
+        } else {
+            self.transform.position = Point2 { x: 999., y: 999. }
+        }
         self.velocity = INITIAL_VELOCITY;
     }
 
@@ -80,5 +88,13 @@ impl Player {
         where G: Graphics<Texture = T>, T: ImageSize
     {
         self.polygon.render(&self.transform, graphics);
+        for i in 0..self.lives {
+            let transform = Transform {
+                position: Point2 { x: -0.9 + i as f64 * 0.1, y: -0.9 },
+                rotation: Rad(0.),
+                scale: Vector2 { x: PLAYER_SCALE * 0.66, y: PLAYER_SCALE * 0.66 },
+            };
+            self.polygon.render(&transform, graphics);
+        }
     }
 }
