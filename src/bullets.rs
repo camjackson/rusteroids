@@ -1,5 +1,5 @@
 use core::slice::Iter;
-use piston_window::{Graphics, ImageSize};
+use piston_window::Graphics;
 use cgmath::{Point2, Rad};
 
 use bullet::Bullet;
@@ -17,8 +17,8 @@ impl Bullets {
         self.bullets.retain(|bullet| { bullet.alive });
     }
 
-    pub fn render<G, T>(&self, graphics: &mut G)
-        where G: Graphics<Texture = T>, T: ImageSize
+    pub fn render<G>(&self, graphics: &mut G)
+        where G: Graphics
     {
         for bullet in &self.bullets { bullet.render(graphics); }
     }

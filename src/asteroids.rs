@@ -1,4 +1,4 @@
-use piston_window::{Graphics, ImageSize};
+use piston_window::Graphics;
 
 use player::Player;
 use asteroid::{Asteroid, AsteroidCollision};
@@ -55,8 +55,8 @@ impl Asteroids {
         }
     }
 
-    pub fn render<G, T>(&self, graphics: &mut G)
-        where G: Graphics<Texture = T>, T: ImageSize
+    pub fn render<G>(&self, graphics: &mut G)
+        where G: Graphics
     {
         for asteroid in &self.asteroids { asteroid.render(graphics); }
     }

@@ -1,4 +1,4 @@
-use piston_window::{polygon, math, Transformed, Graphics, ImageSize};
+use piston_window::{polygon, math, Transformed, Graphics};
 
 use transform::Transform;
 
@@ -8,8 +8,8 @@ pub struct Polygon {
 }
 
 impl Polygon {
-    pub fn render<G, T>(&self, transform: &Transform, graphics: &mut G)
-        where G: Graphics<Texture = T>, T: ImageSize {
+    pub fn render<G>(&self, transform: &Transform, graphics: &mut G)
+        where G: Graphics {
         polygon(
             self.color,
             self.polygon,

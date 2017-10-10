@@ -1,4 +1,4 @@
-use piston_window::{Graphics, ImageSize};
+use piston_window::Graphics;
 use cgmath::{Basis2, Rotation2, Rotation, InnerSpace, Point2, Vector2, Rad};
 use rustfest_game_assets::PLAYER;
 
@@ -84,8 +84,8 @@ impl Player {
         self.velocity = INITIAL_VELOCITY;
     }
 
-    pub fn render<G, T>(&self, graphics: &mut G)
-        where G: Graphics<Texture = T>, T: ImageSize
+    pub fn render<G>(&self, graphics: &mut G)
+        where G: Graphics
     {
         self.polygon.render(&self.transform, graphics);
         for i in 0..self.lives {

@@ -1,4 +1,4 @@
-use piston_window::{Graphics, ImageSize};
+use piston_window::Graphics;
 use cgmath::{Point2, Vector2, Rad, InnerSpace};
 use rustfest_game_assets::ASTEROIDS;
 use rand::random;
@@ -13,8 +13,6 @@ const ASTEROID_SCALES: [f64; 3] = [0.03, 0.06, 0.08];
 const ASTEROID_MAX_SPEED: f64 = 0.2;
 const ASTEROID_MAX_SPIN: f64 = 1.;
 const TAU: f64 = 6.283185;
-
-// TODO: Don't spawn new asteroids on top of the player
 
 pub struct Asteroid {
     pub level: usize,
@@ -65,8 +63,6 @@ impl Asteroid {
         if self.transform.position.x.abs() > 1. { self.transform.position.x *= -1.; }
         if self.transform.position.y.abs() > 1. { self.transform.position.y *= -1.; }
 
-        // TODO: Non-shit collision detection
-
         for (bullet_index, bullet) in bullets.iter().enumerate() {
             let distance = (self.transform.position - bullet.transform.position).magnitude();
             if distance < self.transform.scale.x {
@@ -82,8 +78,8 @@ impl Asteroid {
         AsteroidCollision::None
     }
 
-    pub fn render<G, T>(&self, graphics: &mut G)
-        where G: Graphics<Texture = T>, T: ImageSize
+    pub fn render<G>(&self, graphics: &mut G)
+        where G: Graphics
     {
         self.polygon.render(&self.transform, graphics);
     }

@@ -1,4 +1,4 @@
-use piston_window::{Graphics, ImageSize};
+use piston_window::Graphics;
 use cgmath::{Point2, Vector2, Basis2, Rotation2, Rotation, Rad};
 use rustfest_game_assets::BULLET;
 
@@ -50,8 +50,8 @@ impl Bullet {
         if self.transform.position.y.abs() > 1. { self.transform.position.y *= -1.; }
     }
 
-    pub fn render<G, T>(&self, graphics: &mut G)
-        where G: Graphics<Texture = T>, T: ImageSize
+    pub fn render<G>(&self, graphics: &mut G)
+        where G: Graphics
     {
         self.polygon.render(&self.transform, graphics);
     }
