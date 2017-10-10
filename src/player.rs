@@ -7,15 +7,17 @@ use transform::Transform;
 use polygon::Polygon;
 use bullets::Bullets;
 
-const RED: [f32; 4] = [1., 0., 0., 1.];
+const GREEN: [f32; 4] = [0., 1., 0., 1.];
 const PLAYER_SCALE: f64 = 0.035;
 const MAX_SPEED: f64 = 1.;
 const ROTATION_SPEED: f64 = 2.8;
 const THRUST: f64 = 0.7;
 const FIRE_INTERVAL: f64 = 0.2;
+const INITIAL_POSITION: Point2<f64> = Point2 { x: 0., y: 0.  };
+const INITIAL_VELOCITY: Vector2<f64> = Vector2 { x: 0., y: 0.  };
 
 pub struct Player {
-    transform: Transform,
+    pub transform: Transform,
     polygon: Polygon,
     velocity: Vector2<f64>,
     time_since_fired: f64,
@@ -25,15 +27,15 @@ impl Player {
     pub fn new() -> Player {
         Player {
             transform: Transform {
-                position: Point2 { x: 0., y: 0.  },
+                position: INITIAL_POSITION,
                 rotation: Rad(0.),
                 scale: Vector2 { x: PLAYER_SCALE, y: PLAYER_SCALE },
             },
             polygon: Polygon {
-                color: RED,
+                color: GREEN,
                 polygon: PLAYER,
             },
-            velocity: Vector2 { x: 0., y: 0.  },
+            velocity: INITIAL_VELOCITY,
             time_since_fired: 0.,
         }
     }
@@ -67,6 +69,11 @@ impl Player {
             self.time_since_fired = 0.;
             bullets.spawn(self.transform.position, self.transform.rotation);
         }
+    }
+
+    pub fn kill(&mut self) {
+        self.transform.position = INITIAL_POSITION;
+        self.velocity = INITIAL_VELOCITY;
     }
 
     pub fn render<G, T>(&self, graphics: &mut G)

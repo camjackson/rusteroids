@@ -38,7 +38,7 @@ fn main() {
         event.update(|&UpdateArgs { dt }| {
             player.update(&controller, &mut bullets, dt);
             bullets.update(dt);
-            asteroids.update(&mut bullets, dt);
+            asteroids.update(&mut player, &mut bullets, dt);
         });
 
         event.button(|ButtonArgs { button, state, .. }| {

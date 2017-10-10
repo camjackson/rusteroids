@@ -1,6 +1,7 @@
 use piston_window::{Graphics, ImageSize};
 
-use asteroid::{Asteroid, UpdateResult};
+use player::Player;
+use asteroid::{Asteroid, AsteroidCollision};
 use bullets::Bullets;
 
 const NUM_ASTEROIDS: usize = 3;
@@ -19,14 +20,17 @@ impl Asteroids {
         Asteroids { asteroids }
     }
 
-    pub fn update(&mut self, bullets: &mut Bullets, dt: f64) {
+    pub fn update(&mut self, player: &mut Player, bullets: &mut Bullets, dt: f64) {
         let mut asteroid_deletions = vec![];
         for (asteroid_index, asteroid) in &mut self.asteroids.iter_mut().enumerate() {
-            match asteroid.update(bullets, dt) {
-                UpdateResult::Lived => (),
-                UpdateResult::Died { bullet_index } => {
+            match asteroid.update(player, bullets, dt) {
+                AsteroidCollision::None => (),
+                AsteroidCollision::Player => {
+                    player.kill();
+                }
+                AsteroidCollision::Bullet { index } => {
                     asteroid_deletions.push(asteroid_index);
-                    bullets.delete(bullet_index);
+                    bullets.delete(index);
                 },
             }
         }

@@ -3,6 +3,7 @@ use cgmath::{Point2, Vector2, Rad, InnerSpace};
 use rustfest_game_assets::ASTEROIDS;
 use rand::random;
 
+use player::Player;
 use transform::Transform;
 use polygon::Polygon;
 use bullets::Bullets;
@@ -23,9 +24,10 @@ pub struct Asteroid {
     spin: Rad<f64>,
 }
 
-pub enum UpdateResult {
-    Lived,
-    Died { bullet_index: usize },
+pub enum AsteroidCollision {
+    None,
+    Player,
+    Bullet { index: usize },
 }
 
 fn rand(min: f64, range: f64) -> f64 {
@@ -55,7 +57,7 @@ impl Asteroid {
         }
     }
 
-    pub fn update(&mut self, bullets: &Bullets, dt: f64) -> UpdateResult {
+    pub fn update(&mut self, player: &Player, bullets: &Bullets, dt: f64) -> AsteroidCollision {
         self.transform.position += self.velocity * dt;
         self.transform.rotation += self.spin * dt;
 
@@ -63,13 +65,21 @@ impl Asteroid {
         if self.transform.position.x.abs() > 1. { self.transform.position.x *= -1.; }
         if self.transform.position.y.abs() > 1. { self.transform.position.y *= -1.; }
 
+        // TODO: Non-shit collision detection
+
         for (bullet_index, bullet) in bullets.iter().enumerate() {
-            let distance = self.transform.position - bullet.transform.position;
-            if distance.magnitude() < self.transform.scale.x {
-                return UpdateResult::Died { bullet_index };
+            let distance = (self.transform.position - bullet.transform.position).magnitude();
+            if distance < self.transform.scale.x {
+                return AsteroidCollision::Bullet { index: bullet_index };
             }
         }
-        UpdateResult::Lived
+
+        let player_distance = (self.transform.position - player.transform.position).magnitude();
+        if player_distance < self.transform.scale.x + player.transform.scale.x {
+           return AsteroidCollision::Player;
+        }
+
+        AsteroidCollision::None
     }
 
     pub fn render<G, T>(&self, graphics: &mut G)
