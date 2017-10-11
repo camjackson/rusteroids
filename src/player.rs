@@ -1,11 +1,16 @@
+use std::fs::File;
+use std::io::BufReader;
 use piston_window::Graphics;
 use cgmath::{Basis2, Rotation2, Rotation, InnerSpace, Point2, Vector2, Rad};
 use rustfest_game_assets::PLAYER;
+use rodio;
+use rodio::Source;
 
 use controller::Controller;
 use transform::Transform;
 use polygon::Polygon;
 use bullets::Bullets;
+use asset_path;
 
 const GREEN: [f32; 4] = [0., 1., 0., 1.];
 const PLAYER_SCALE: f64 = 0.035;
@@ -45,7 +50,7 @@ impl Player {
         }
     }
 
-    pub fn update(&mut self, controller: &Controller, bullets: &mut Bullets, dt: f64) {
+    pub fn update(&mut self, audio_endpoint: &rodio::Endpoint, controller: &Controller, bullets: &mut Bullets, dt: f64) {
         let acceleration = Basis2::from_angle(self.transform.rotation).rotate_vector(Vector2::unit_y())* THRUST;
 
         // Apply acceleration to the velocity
@@ -73,6 +78,7 @@ impl Player {
         if controller.fire && self.time_since_fired > FIRE_INTERVAL {
             self.time_since_fired = 0.;
             bullets.spawn(self.transform.position, self.transform.rotation);
+            self.laser_sound(audio_endpoint)
         }
     }
 
@@ -102,5 +108,11 @@ impl Player {
             };
             self.polygon.render(&transform, graphics);
         }
+    }
+
+    fn laser_sound(&self, audio_endpoint: &rodio::Endpoint) {
+        let buffer = BufReader::new(File::open(asset_path("laser.wav")).unwrap());
+        let laser = rodio::Decoder::new(buffer).unwrap();
+        rodio::play_raw(&audio_endpoint, laser.convert_samples());
     }
 }
