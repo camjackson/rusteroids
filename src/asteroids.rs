@@ -30,6 +30,7 @@ impl Asteroids {
                 }
                 AsteroidCollision::Bullet { index } => {
                     asteroid_deletions.push(asteroid_index);
+                    player.score();
                     bullets.delete(index);
                 },
             }

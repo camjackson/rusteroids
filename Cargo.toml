@@ -8,3 +8,4 @@ piston_window = "0.70.0"
 cgmath = "0.15.0"
 rustfest-game-assets = { git = "https://github.com/Vurich/rustfest-game-assets.git" }
 rand = "0.3"
+find_folder = "0.3.0"

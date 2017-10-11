@@ -23,6 +23,7 @@ pub struct Player {
     velocity: Vector2<f64>,
     time_since_fired: f64,
     lives: u8,
+    pub score: u16,
 }
 
 impl Player {
@@ -40,6 +41,7 @@ impl Player {
             velocity: INITIAL_VELOCITY,
             time_since_fired: 0.,
             lives: LIVES,
+            score: 0,
         }
     }
 
@@ -72,6 +74,10 @@ impl Player {
             self.time_since_fired = 0.;
             bullets.spawn(self.transform.position, self.transform.rotation);
         }
+    }
+
+    pub fn score(&mut self) {
+        self.score += 1;
     }
 
     pub fn kill(&mut self) {
