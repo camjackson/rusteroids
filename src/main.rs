@@ -5,10 +5,12 @@ extern crate rustfest_game_assets;
 extern crate rand;
 extern crate find_folder;
 extern crate rodio;
+extern crate kay;
 
 use std::path::PathBuf;
 use piston_window::*;
 
+mod actor_system;
 mod transform;
 mod player;
 mod controller;
@@ -46,6 +48,9 @@ fn main() {
 
     // Initialise audio
     let audio_endpoint = rodio::get_default_endpoint().unwrap();
+
+    // Initialise actor system
+    let actor_system = actor_system::create();
 
     // Create game objects
     let mut controller = Controller::default();
