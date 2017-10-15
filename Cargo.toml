@@ -11,3 +11,8 @@ rand = "0.3"
 find_folder = "0.3.0"
 rodio = "0.5.2"
 kay = { git = "https://github.com/citybound/citybound" }
+compact = { git = "https://github.com/citybound/citybound" }
+compact_macros = { git = "https://github.com/citybound/citybound" }
+
+[build-dependencies]
+kay_codegen = { git = "https://github.com/citybound/citybound" }
