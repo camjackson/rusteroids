@@ -16,6 +16,7 @@ use std::net::{SocketAddr, IpAddr, Ipv4Addr};
 use piston_window::*;
 use kay::{World, Networking, ActorSystem};
 
+mod game_object;
 mod transform;
 mod player;
 mod controller;
@@ -26,6 +27,8 @@ mod asteroid;
 mod polygon;
 mod thing;
 
+use game_object::{GameID, GameObjectID};
+use thing::ThingID;
 use player::Player;
 use controller::Controller;
 use bullets::Bullets;
@@ -64,11 +67,21 @@ fn main() {
     let localhost_8080 = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 8080);
     let networking = Networking::new(machine_id, vec!(localhost_8080));
     let mut actor_system = ActorSystem::new(Box::new(actor_panic), networking);
+    let mut world = actor_system.world();
+
+    // Initialise actor types
     thing::setup(&mut actor_system);
+    game_object::setup(&mut actor_system);
+
+    // Initialise game
+    let game_object_broadcast_ids: Vec<GameObjectID> = vec![
+        ThingID::local_broadcast(&mut world).into(),
+    ].into();
+    let game = GameID::spawn(game_object_broadcast_ids.into(), &mut world);
 
     // Hello, actor system!
-    let thing = thing::ThingID::spawn(&mut actor_system.world());
-    thing.do_something(42, &mut actor_system.world());
+    let thing = ThingID::spawn(&mut world);
+    thing.do_something(42, &mut world);
 
     // Create game objects
     let mut controller = Controller::default();
@@ -79,6 +92,7 @@ fn main() {
     // Loop forever!
     while let Some(event) = window.next() {
         event.update(|&UpdateArgs { dt }| {
+            game.update(dt, &mut world);
             player.update(&audio_endpoint, &controller, &mut bullets, dt);
             bullets.update(dt);
             asteroids.update(&mut player, &mut bullets, dt);
@@ -88,7 +102,7 @@ fn main() {
             controller.update(button, state)
         });
 
-        actor_system.process_all_messages();
+        // actor_system.process_all_messages();
 
         window.draw_2d(&event, |context, graphics| {
             clear(BLUE, graphics);
