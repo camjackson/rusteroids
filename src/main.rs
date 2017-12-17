@@ -48,7 +48,7 @@ fn actor_panic(_thing: Box<Any>, _world: &mut World) {
 
 fn main() {
     // Create main window
-    let mut window: PistonWindow = WindowSettings::new("WOW IT'S A GAME", [800, 800])
+    let window: PistonWindow = WindowSettings::new("WOW IT'S A GAME", [800, 800])
         .exit_on_esc(true)
         .vsync(true)
         .build()
@@ -57,7 +57,7 @@ fn main() {
     // Create fonts
     let ref font = asset_path("FiraSans-Regular.ttf");
     let factory = window.factory.clone();
-    let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
+    let glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
 
     // Initialise audio
     let audio_endpoint = rodio::get_default_endpoint().unwrap();
@@ -67,6 +67,7 @@ fn main() {
     let localhost_8080 = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 8080);
     let networking = Networking::new(machine_id, vec!(localhost_8080));
     let mut actor_system = ActorSystem::new(Box::new(actor_panic), networking);
+    actor_system.networking_connect();
     let mut world = actor_system.world();
 
     // Initialise actor types
@@ -84,12 +85,40 @@ fn main() {
     thing.do_something(42, &mut world);
 
     // Create game objects
-    let mut controller = Controller::default();
-    let mut player = Player::new();
-    let mut bullets = Bullets::default();
-    let mut asteroids = Asteroids::new();
+    let controller = Controller::default();
+    let player = Player::new();
+    let bullets = Bullets::default();
+    let asteroids = Asteroids::new();
+
+    // Process any setup messages
+    actor_system.process_all_messages();
 
     // Loop forever!
+    game_loop(window,
+              actor_system,
+              audio_endpoint,
+              glyphs,
+              controller,
+              game,
+              world,
+              player,
+              bullets,
+              asteroids,
+    );
+}
+
+fn game_loop(
+    mut window: PistonWindow,
+    mut actor_system: ActorSystem,
+    audio_endpoint: rodio::Endpoint,
+    mut glyphs: Glyphs,
+    mut controller: Controller,
+    game: GameID,
+    mut world: World,
+    mut player: Player,
+    mut bullets: Bullets,
+    mut  asteroids: Asteroids,
+) {
     while let Some(event) = window.next() {
         event.update(|&UpdateArgs { dt }| {
             game.update(dt, &mut world);
@@ -103,6 +132,7 @@ fn main() {
         });
 
         // actor_system.process_all_messages();
+        actor_system.networking_send_and_receive();
 
         window.draw_2d(&event, |context, graphics| {
             clear(BLUE, graphics);
@@ -119,5 +149,7 @@ fn main() {
                     graphics
                 );
         });
+
+        actor_system.networking_finish_turn();
     }
 }
