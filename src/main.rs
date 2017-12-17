@@ -125,14 +125,15 @@ fn game_loop(
             player.update(&audio_endpoint, &controller, &mut bullets, dt);
             bullets.update(dt);
             asteroids.update(&mut player, &mut bullets, dt);
+
+            actor_system.process_all_messages();
+            actor_system.networking_send_and_receive();
+            actor_system.networking_finish_turn();
         });
 
         event.button(|ButtonArgs { button, state, .. }| {
             controller.update(button, state)
         });
-
-        // actor_system.process_all_messages();
-        actor_system.networking_send_and_receive();
 
         window.draw_2d(&event, |context, graphics| {
             clear(BLUE, graphics);
@@ -149,7 +150,5 @@ fn game_loop(
                     graphics
                 );
         });
-
-        actor_system.networking_finish_turn();
     }
 }
