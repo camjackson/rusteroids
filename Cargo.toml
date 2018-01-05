@@ -4,13 +4,9 @@ version = "0.1.0"
 authors = ["Cam Jackson <camjackson89@gmail.com>"]
 
 [dependencies]
-piston_window = "0.70.0"
-cgmath = "0.15.0"
-rustfest-game-assets = { git = "https://github.com/Vurich/rustfest-game-assets.git" }
-rand = "0.3"
-find_folder = "0.3.0"
-rodio = "0.5.2"
 kay = { git = "https://github.com/citybound/citybound" }
+stagemaster = { git = "https://github.com/citybound/citybound" }
+monet = { git = "https://github.com/citybound/citybound" }
 compact = { git = "https://github.com/citybound/citybound" }
 compact_macros = { git = "https://github.com/citybound/citybound" }
 

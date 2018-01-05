@@ -1,6 +1,6 @@
 use kay::{World, ActorSystem};
 
-use game_object::{GameObject, GameObjectID, MSG_GameObject_update};
+use game_object::{GameObject, GameObjectID};
 
 #[derive(Compact, Clone)]
 pub struct Thing {
