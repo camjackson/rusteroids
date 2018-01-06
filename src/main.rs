@@ -12,9 +12,11 @@ use monet::{RendererID, RenderableID};
 use monet::glium::glutin::WindowBuilder;
 use stagemaster::UserInterfaceID;
 
+mod frame_counter;
 mod game_object;
 mod thing;
 
+use frame_counter::FrameCounter;
 use game_object::{GameID, GameObjectID};
 use thing::{Thing, ThingID};
 
@@ -39,8 +41,13 @@ fn main() {
     // Process any initialisation messages
     actor_system.process_all_messages();
 
+    let mut frame_counter = FrameCounter::new();
+
     // Loop forever!
     loop {
+        // Count time since last frame
+        frame_counter.next_frame();
+
         // Update UI
         ui.process_events(world);
         actor_system.process_all_messages();
@@ -61,6 +68,9 @@ fn main() {
         // Do network stuff?
         actor_system.networking_send_and_receive();
         actor_system.process_all_messages();
+
+        // Print fps
+        frame_counter.print_fps(ui, world);
 
         // UI... something?
         ui.start_frame(world);

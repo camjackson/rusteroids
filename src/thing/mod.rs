@@ -19,7 +19,7 @@ impl Thing {
 
 impl GameObject for Thing {
     fn update(&mut self, dt: f64, _: &mut World) {
-        println!("UPDATING! {}", dt);
+//        println!("UPDATING! {}", dt);
     }
 }
 
