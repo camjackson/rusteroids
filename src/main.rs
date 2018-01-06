@@ -32,7 +32,7 @@ fn main() {
 
     // Initialise game and graphics
     let game = game(world);
-    let (ui, renderer) = graphics(actor_system);
+    let (ui, renderer) = graphics(actor_system, world);
 
     // Hello, actor system!
     let player = PlayerID::spawn(world);
@@ -95,9 +95,9 @@ fn game(world: &mut World) -> GameID {
     GameID::spawn(game_object_broadcast_ids.into(), world)
 }
 
-fn graphics(actor_system: &mut ActorSystem,) -> (UserInterfaceID, RendererID) {
+fn graphics(actor_system: &mut ActorSystem, world: &mut World) -> (UserInterfaceID, RendererID) {
     let renderable_broadcast_ids: Vec<RenderableID> = vec![
-
+        Player::global_broadcast(world).into(),
     ];
     let env = stagemaster::environment::Environment {
         name: "Rusteroids",

@@ -2,6 +2,8 @@ use kay::{World, ActorSystem};
 
 use game_object::{GameObject, GameObjectID};
 
+mod rendering;
+
 #[derive(Compact, Clone)]
 pub struct Player {
     id: PlayerID,
@@ -27,6 +29,7 @@ pub fn setup(actor_system: &mut ActorSystem) {
     actor_system.register::<Player>();
 
     auto_setup(actor_system);
+    rendering::setup(actor_system);
 }
 
 #[allow(dead_code)]
