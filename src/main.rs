@@ -41,10 +41,32 @@ fn main() {
 
     // Loop forever!
     loop {
-        game.update(0.1, world);
-
+        // Update UI
+        ui.process_events(world);
         actor_system.process_all_messages();
+
+        // Quit if we're quitting
+        if actor_system.shutting_down {
+            break;
+        }
+
+        // Update game
+        game.update(0.1, world);
+        actor_system.process_all_messages();
+
+        // Render
+        renderer.render(world);
+        actor_system.process_all_messages();
+
+        // Do network stuff?
         actor_system.networking_send_and_receive();
+        actor_system.process_all_messages();
+
+        // UI... something?
+        ui.start_frame(world);
+        actor_system.process_all_messages();
+
+        // Finish networking?
         actor_system.networking_finish_turn();
     }
 }
