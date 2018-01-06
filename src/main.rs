@@ -14,11 +14,11 @@ use stagemaster::UserInterfaceID;
 
 mod debug_info;
 mod game_object;
-mod thing;
+mod player;
 
 use debug_info::DebugInfo;
 use game_object::{GameID, GameObjectID};
-use thing::{Thing, ThingID};
+use player::{Player, PlayerID};
 
 fn main() {
     // Initialise actor system
@@ -27,7 +27,7 @@ fn main() {
     actor_system.networking_connect();
 
     // Initialise actor types
-    thing::setup(actor_system);
+    player::setup(actor_system);
     game_object::setup(actor_system);
 
     // Initialise game and graphics
@@ -35,8 +35,8 @@ fn main() {
     let (ui, renderer) = graphics(actor_system);
 
     // Hello, actor system!
-    let thing = ThingID::spawn(world);
-    thing.do_something(42, world);
+    let player = PlayerID::spawn(world);
+    player.do_something(42, world);
 
     // Process any initialisation messages
     actor_system.process_all_messages();
@@ -90,7 +90,7 @@ fn actor_system() -> ActorSystem {
 
 fn game(world: &mut World) -> GameID {
     let game_object_broadcast_ids: Vec<GameObjectID> = vec![
-        Thing::local_broadcast(world).into(),
+        Player::local_broadcast(world).into(),
     ].into();
     GameID::spawn(game_object_broadcast_ids.into(), world)
 }

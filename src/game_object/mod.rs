@@ -8,17 +8,17 @@ pub trait GameObject {
 #[derive(Compact, Clone)]
 pub struct Game {
     id: GameID,
-    objects: CVec<GameObjectID>,
+    broadcast_ids: CVec<GameObjectID>,
 }
 
 impl Game {
-    pub fn spawn(id: GameID, objects: &CVec<GameObjectID>, _: &mut World) -> Self {
-        Game { id, objects: objects.clone() }
+    pub fn spawn(id: GameID, broadcast_ids: &CVec<GameObjectID>, _: &mut World) -> Self {
+        Game { id, broadcast_ids: broadcast_ids.clone() }
     }
 
     pub fn update(&mut self, dt: f64, world: &mut World) {
-        for game_object in &self.objects {
-            game_object.update(dt, world);
+        for broadcast_id in &self.broadcast_ids {
+            broadcast_id.update(dt, world);
         }
     }
 }
