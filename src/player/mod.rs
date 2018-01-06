@@ -23,10 +23,10 @@ impl GameObject for Player {
     }
 }
 
-pub fn setup(system: &mut ActorSystem) {
-    system.register::<Player>();
+pub fn setup(actor_system: &mut ActorSystem) {
+    actor_system.register::<Player>();
 
-    auto_setup(system);
+    auto_setup(actor_system);
 }
 
 #[allow(dead_code)]
